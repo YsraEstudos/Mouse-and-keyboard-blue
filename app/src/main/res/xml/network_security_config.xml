@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Network security policy:
+    - Trusts system CAs only.
+    - Allows local LAN HTTP strictly for user-configured Wi-Fi/USB Companion endpoints,
+      paired with runtime RFC1918/loopback host validation in PcCompanionClient so no
+      cleartext request or auth token ever leaves the local network.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">localhost</domain>
+        <domain includeSubdomains="false">127.0.0.1</domain>
+    </domain-config>
+</network-security-config>

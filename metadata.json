@@ -1,0 +1,6 @@
+{
+  "name": "Controle BT",
+  "description": "Controle remoto Bluetooth HID completo com touchpad gestual, teclado PC com corretor inteligente, multimídia, numpad calculadora, apresentador, scanner QR/barras e layouts personalizados.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,53 @@
+<resources>
+    <string name="app_name">Controle BT</string>
+    <string name="nav_mouse_keyboard">Mouse e Teclado</string>
+    <string name="nav_multimedia">Multimídia</string>
+    <string name="nav_pc_keyboard">Teclado de PC</string>
+    <string name="nav_numpad">Teclado Numérico</string>
+    <string name="nav_presenter">Apresentador</string>
+    <string name="nav_scanner">Leitor de Código</string>
+    <string name="nav_custom_layouts">Layouts Personalizados</string>
+    <string name="nav_devices">Dispositivos Bluetooth</string>
+    <string name="nav_settings">Configurações</string>
+
+    <string name="notification_channel_name">Conexão Bluetooth HID</string>
+    <string name="notification_channel_desc">Mantém ativa a conexão do controle remoto Bluetooth com seu PC, Mac, TV ou iPad</string>
+    <string name="notification_connected_title">Conectado a %1$s</string>
+    <string name="notification_connected_text">Toque para voltar ao Controle BT</string>
+    <string name="notification_action_disconnect">Desconectar</string>
+
+    <string name="banner_disconnected_title">Nenhum aparelho conectado</string>
+    <string name="banner_disconnected_cta">Conectar</string>
+    <string name="banner_bt_off_title">Bluetooth desativado</string>
+    <string name="banner_permission_title">Permissão Bluetooth pendente</string>
+
+    <string name="onboarding_title_1">Controle PC, TV, Mac e iPhone sem servidor</string>
+    <string name="onboarding_desc_1">O Controle BT usa o padrão nativo Bluetooth HID do Android 9+ para atuar como mouse, teclado, controle de TV, gamepad e mesa digitalizadora sem instalar nada no destino.</string>
+    <string name="onboarding_title_2">Permissões e pareamento rápido</string>
+    <string name="onboarding_desc_2">Autorize Dispositivos por Perto para listar e conectar aparelhos pareados. No iPhone, ative Ajustes &gt; Acessibilidade &gt; Toque &gt; AssistiveTouch para ver o cursor do mouse.</string>
+    <string name="onboarding_title_3">Escolha o sistema que você mais usa</string>
+    <string name="onboarding_desc_3">Atalhos como Copiar, Colar, Alternar Janelas e Busca se adaptam automaticamente ao sistema escolhido. Você pode alterar a qualquer momento.</string>
+
+    <string name="confirm_power_down_title">Desligar o computador?</string>
+    <string name="confirm_power_down_msg">Isso enviará o comando HID de desligamento imediato para o dispositivo conectado.</string>
+    <string name="confirm_sleep_title">Suspender o computador?</string>
+    <string name="confirm_sleep_msg">O dispositivo conectado entrará em modo de suspensão (Sleep).</string>
+    <string name="confirm_automation_title">Confirmar automação externa?</string>
+    <string name="confirm_automation_msg">Um link controlebt://, tag NFC ou app de automação solicitou enviar comandos ao dispositivo conectado. Confira os dados abaixo antes de permitir:</string>
+    <string name="confirm_reset_defaults_title">Restaurar configurações padrão?</string>
+    <string name="confirm_reset_defaults_msg">Todas as preferências de mouse, teclado, aparência e rede voltarão aos valores originais. Seus layouts e senhas do cofre não serão apagados.</string>
+
+    <string name="about_privacy_summary">100% local e privado: o Controle BT não coleta telemetria, não envia teclas para a nuvem e protege suas credenciais exclusivamente no Android Keystore do aparelho.</string>
+    <string name="ios_assistive_touch_tip">Dica iPhone/iPad: no iPhone, ative Ajustes &gt; Acessibilidade &gt; Toque &gt; AssistiveTouch para exibir o cursor do mouse. Use o perfil HID Padrão Universal para pareamento imediato com dispositivos Apple.</string>
+    <string name="ios_digitizer_warning">O iOS e o iPadOS ignoram sinais HID de Mesa Digitalizadora absoluta. Para desenhar ou navegar no iPhone/iPad, use o modo Mouse e Teclado com o perfil HID Padrão Universal.</string>
+
+    <!-- Samsung Galaxy S23 Ultra & S Pen Air Actions -->
+    <string name="spen_action_next_slide">Próximo slide / Avançar</string>
+    <string name="spen_action_prev_slide">Slide anterior / Voltar</string>
+    <string name="spen_action_play_pause">Reproduzir / Pausar mídia</string>
+    <string name="spen_action_left_click">Clique esquerdo do mouse</string>
+    <string name="spen_action_media_next">Próxima faixa</string>
+    <string name="spen_action_media_prev">Faixa anterior</string>
+    <string name="s23_spen_guide_body">No Galaxy S23 Ultra, abra Configurações → Recursos avançados → S Pen → Ações aéreas → Controle BT para personalizar clique único, clique duplo e gestos no ar. Com este app aberto, o botão da S Pen controla slides, mídia e cliques via Bluetooth HID.</string>
+    <string name="s23_device_care_guide">Para impedir que o Device Care da One UI derrube o Bluetooth ao bloquear a tela: 1) Toque em "Bateria do App" → Bateria → selecione Irrestrito. 2) Em Assistência do Aparelho → Bateria → Limites de uso em segundo plano → Apps nunca suspensos, adicione o Controle BT.</string>
+</resources>

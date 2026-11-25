@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<remote-actions version="1.0">
+    <action
+        id="spen_next_slide"
+        label="@string/spen_action_next_slide"
+        priority="1"
+        trigger_key="PAGE_DOWN" />
+    <action
+        id="spen_prev_slide"
+        label="@string/spen_action_prev_slide"
+        priority="2"
+        trigger_key="PAGE_UP" />
+    <action
+        id="spen_play_pause"
+        label="@string/spen_action_play_pause"
+        priority="3"
+        trigger_key="MEDIA_PLAY_PAUSE" />
+    <action
+        id="spen_left_click"
+        label="@string/spen_action_left_click"
+        priority="4"
+        trigger_key="F5" />
+    <action
+        id="spen_media_next"
+        label="@string/spen_action_media_next"
+        priority="5"
+        trigger_key="MEDIA_NEXT" />
+    <action
+        id="spen_media_prev"
+        label="@string/spen_action_media_prev"
+        priority="6"
+        trigger_key="MEDIA_PREVIOUS" />
+</remote-actions>

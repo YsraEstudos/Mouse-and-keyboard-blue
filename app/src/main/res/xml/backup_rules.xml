@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <!-- Never back up hardware-Keystore encrypted vault file (key is device-bound) -->
+    <exclude domain="file" path="vault_credentials.enc" />
+    <exclude domain="file" path="datastore/controle_bt_settings.preferences_pb" />
+</full-backup-content>
