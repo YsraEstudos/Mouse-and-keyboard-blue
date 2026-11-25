@@ -1,0 +1,143 @@
+name: Compilar APK Android (Controle BT)
+
+on:
+  workflow_dispatch:
+    inputs:
+      publish_release:
+        description: "Publicar APK também em uma GitHub Release (compatível com repo privado)"
+        required: false
+        default: true
+        type: boolean
+      release_tag:
+        description: "Tag personalizada da Release (opcional; vazio gera apk-build-<numero>)"
+        required: false
+        default: ""
+        type: string
+      run_unit_tests:
+        description: "Executar testes unitários principais antes de gerar o APK"
+        required: false
+        default: true
+        type: boolean
+  push:
+    branches:
+      - main
+      - master
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-apk-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-apk:
+    name: Gerar APK Debug Instalável
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Clonar repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Java 21 (Temurin)
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "21"
+
+      - name: Configurar Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Configurar Gradle 9.3.1 (sem script gradlew)
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "9.3.1"
+          validate-wrappers: false
+
+      - name: Preparar debug.keystore para assinatura do APK Debug
+        run: |
+          if [ -f "debug.keystore.base64" ]; then
+            tr -d '\r\n' < debug.keystore.base64 | base64 -d > debug.keystore
+          fi
+          if [ ! -s "debug.keystore" ]; then
+            rm -f debug.keystore
+            keytool -genkeypair -v \
+              -keystore debug.keystore \
+              -storepass android \
+              -alias androiddebugkey \
+              -keypass android \
+              -keyalg RSA \
+              -keysize 2048 \
+              -validity 10000 \
+              -dname "CN=Android Debug,O=Android,C=US"
+          fi
+          keytool -list -keystore debug.keystore -storepass android > /dev/null
+          echo "Keystore debug validado com sucesso."
+
+      - name: Executar testes unitários principais
+        if: github.event_name != 'workflow_dispatch' || inputs.run_unit_tests == true
+        run: gradle :app:testDebugUnitTest --tests com.example.ControleBtCoreTest --no-daemon --stacktrace
+
+      - name: Compilar APK Debug (:app:assembleDebug)
+        run: gradle :app:assembleDebug --no-daemon --stacktrace
+
+      - name: Verificar APK gerado e preparar arquivo para download
+        id: verify_apk
+        run: |
+          APK_SOURCE="app/build/outputs/apk/debug/app-debug.apk"
+          if [ ! -s "$APK_SOURCE" ]; then
+            echo "ERRO: APK Debug não foi encontrado em $APK_SOURCE"
+            exit 1
+          fi
+
+          APK_FILENAME="ControleBT-debug-b${GITHUB_RUN_NUMBER}.apk"
+          APK_STAGED="${RUNNER_TEMP}/${APK_FILENAME}"
+          cp "$APK_SOURCE" "$APK_STAGED"
+
+          ls -lh "$APK_SOURCE"
+          sha256sum "$APK_SOURCE"
+
+          echo "apk_source=${APK_SOURCE}" >> "$GITHUB_OUTPUT"
+          echo "apk_staged=${APK_STAGED}" >> "$GITHUB_OUTPUT"
+          echo "apk_filename=${APK_FILENAME}" >> "$GITHUB_OUTPUT"
+
+      - name: Disponibilizar APK como Artifact do GitHub Actions
+        uses: actions/upload-artifact@v4
+        with:
+          name: ControleBT-debug-apk-b${{ github.run_number }}
+          path: app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Publicar APK na GitHub Release (opcional / tags)
+        if: (github.event_name == 'workflow_dispatch' && inputs.publish_release == true) || startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          INPUT_RELEASE_TAG: ${{ inputs.release_tag }}
+          APK_STAGED: ${{ steps.verify_apk.outputs.apk_staged }}
+          APK_FILENAME: ${{ steps.verify_apk.outputs.apk_filename }}
+        run: |
+          if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
+            TAG_NAME="${GITHUB_REF_NAME}"
+          elif [ -n "$INPUT_RELEASE_TAG" ]; then
+            TAG_NAME="$INPUT_RELEASE_TAG"
+          else
+            TAG_NAME="apk-build-${GITHUB_RUN_NUMBER}"
+          fi
+
+          RELEASE_TITLE="Controle BT - Build #${GITHUB_RUN_NUMBER}"
+          RELEASE_NOTES="APK Debug instalável gerado automaticamente pelo GitHub Actions (commit ${GITHUB_SHA::7})."
+
+          if gh release view "$TAG_NAME" > /dev/null 2>&1; then
+            gh release upload "$TAG_NAME" "${APK_STAGED}#${APK_FILENAME}" --clobber
+          else
+            gh release create "$TAG_NAME" "${APK_STAGED}#${APK_FILENAME}" \
+              --target "$GITHUB_SHA" \
+              --title "$RELEASE_TITLE" \
+              --notes "$RELEASE_NOTES" \
+              --prerelease
+          fi
